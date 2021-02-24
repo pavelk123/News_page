@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from event.models import *
 
+categorys= Category.objects.all()
 
 def index(request):
-    if request.GET:
-        print(request.GET)
-    return HttpResponse('<h1>Тут нельзя искать баги</h1><br>но ты поищи')
+    #if request.GET:
+    #    print(request.GET)
+    return render(request, 'event/base.html',{'category':categorys})
 
 def event(request, event_slug):
     return HttpResponse(f'Страница новости<p>{event_slug}</p>')
