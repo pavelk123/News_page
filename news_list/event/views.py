@@ -3,14 +3,31 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from event.models import *
 
 categorys= Category.objects.all()
+posts = Event.objects.order_by('-pub_date').all()
 
 def index(request):
     #if request.GET:
     #    print(request.GET)
-    return render(request, 'event/base.html',{'category':categorys})
+    title ='Главная страница'
+    return render(request, 'event/base.html',{'category':categorys, 'posts':posts, 'title':title})
+
 
 def event(request, event_slug):
-    return HttpResponse(f'Страница новости<p>{event_slug}</p>')
+    post=Event.objects.get(slug=event_slug)
+    title=post.title
+    return render(request, 'event/event.html',{'category':categorys,'post':post, 'title':title})
+
+
+def category_list(request, cat_slug):
+
+    posts= Event.objects.filter(category=Category.objects.get(slug=cat_slug))
+    title = posts.first().category.title
+    category_selected = cat_slug
+    return render(request, 'event/base.html', {'category': categorys, 'posts': posts, 'title':title})
+
+def search(request, search_slug):
+    pass
+
 
 def archive(request, year):
     year = int(year)
